@@ -29,15 +29,25 @@ export class HomePage {
     this.menu.swipeEnable(true);
   }
 
-  login() {
-    console.log(this.creds);
+  ionViewDidEnter() {
     this.auth.authenticate(this.creds)
       .subscribe(
         response => {
           this.auth.successfulLogin(response.headers.get('Authorization'));
           this.navCtrl.setRoot('CategoriasPage');
         },
-        error => {}
+        error => { }
+      );
+  }
+
+  login() {
+    this.auth.authenticate(this.creds)
+      .subscribe(
+        response => {
+          this.auth.successfulLogin(response.headers.get('Authorization'));
+          this.navCtrl.setRoot('CategoriasPage');
+        },
+        error => { }
       );
   }
 
