@@ -1,3 +1,4 @@
+import { PedidoService } from './../../services/domain/pedido.service';
 import { CartItem } from './../../models/card-item';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
@@ -23,7 +24,8 @@ export class OrderConfirmationPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public clienteService: ClienteService,
-    public cartService: CartService) {
+    public cartService: CartService,
+    public pedidoService: PedidoService) {
 
     this.pedido = this.navParams.get('pedido');
   }
@@ -49,4 +51,22 @@ export class OrderConfirmationPage {
   total(): number {
     return this.cartService.total();
   }
+
+  back() {
+    this.navCtrl.setRoot('CartPage');
+  }
+
+  checkout() {
+    this.pedidoService.insert(this.pedido)
+      .subscribe(response => {
+        this.cartService.createOrClearCart();
+        console.log(response.headers.get('Location'));
+      },
+        error => {
+          if (error.status == 403) {
+            this.navCtrl.setRoot('HomePage');
+          }
+        });
+  }
+
 }
